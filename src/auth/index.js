@@ -33,14 +33,14 @@ export const signin = (user)=>{
        };
 export const authenticate = (data, next) =>{
 if (typeof window !== 'undefined'){
-    localStorage.setItem('key for local storage', JSON.stringify(data));
+    localStorage.setItem('jwt', JSON.stringify(data));
     next();
 }
 };
 
 export const signout = (next) =>{
 if(typeof window!=='undefined') {
-    localStorage.removeItem('key for local storage');
+    localStorage.removeItem('jwt');
     next();
     return fetch(`${API}signout`,{
         method:'GET',
@@ -55,8 +55,8 @@ export const isAuthenticated = () =>{
     if(typeof window == 'undefined'){
         return false
     }
-    if(localStorage.getItem('key for local storage')) {
-        return JSON.parse(localStorage.getItem('key for local storage'));
+    if(localStorage.getItem('jwt')) {
+        return JSON.parse(localStorage.getItem('jwt'));
     }
     else {
         return false;
