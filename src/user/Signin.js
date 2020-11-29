@@ -1,7 +1,7 @@
-import React,{useState} from 'react';
+import {React, useState} from 'react';
 import Layout from '../core/Layout';
 import { Redirect } from 'react-router-dom';
-import {signin, authenticate} from '../auth'
+import {signin, authenticate, isAuthenticated} from '../auth'
 const SignIn = () =>{
     const [values, setvalues] = useState({
         email:'karam@gmail.com',
@@ -10,8 +10,17 @@ const SignIn = () =>{
         loading: false,
         redirectToReferre: false
     })
+    // const [emailValid,setEmailValid]=useState(false)
     const {loading, email, password, redirectToReferre, error} = values;
+    const {user}= isAuthenticated();
     const handleChange = (label ,event) =>{
+        setvalues({...values, error: false, [label]: event.target.value});
+        // if(label === 'email'){
+        //     const regex=/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        //    const isValid = regex.test(event.target.value)
+        //    setEmailValid(isValid)
+            
+        // }
         setvalues({...values, error: false, [label]: event.target.value});
     }
     const clickSubmit = (event) =>{
@@ -62,11 +71,18 @@ const SignIn = () =>{
     
    );
    const RedirectUser = () =>{
-       if(redirectToReferre){
+       if (redirectToReferre){
+          if (user && user.role === 1){
+            return <Redirect to='/admin/dashboard'/>
+          } else {
+            return <Redirect to='/user/dashboard'/>
+          }
+       }
+       if(isAuthenticated()){
            return <Redirect to='/'/>
        }
    }
-    return(
+    return (
     <Layout title='Signin Page' 
             description='Welcome to Signin page of Node React E-Commerce App'
             className='container col-md-8 offset-md-2'>
@@ -77,6 +93,5 @@ const SignIn = () =>{
 
     </Layout>
     )
-}
+}    
 export default SignIn;
-
